@@ -1,0 +1,22 @@
+[package]
+name = "musevideo-client"
+version = "0.1.0"
+edition = "2021"
+description = "A lightweight Rust helper toolkit for Muse Video text, image and video to video generation workflows."
+license = "MIT"
+readme = "README.md"
+homepage = "https://musevideo.art"
+repository = "https://github.com/JulianSmith99988/musevideo-client"
+documentation = "https://docs.rs/musevideo-client"
+keywords = ["ai", "video", "workflow", "generator", "client"]
+categories = ["api-bindings", "web-programming"]
+
+[dependencies]
+serde = { version = "1", features = ["derive"], optional = true }
+
+[features]
+default = []
+serde = ["dep:serde"]
+
+[package.metadata.docs.rs]
+all-features = true
