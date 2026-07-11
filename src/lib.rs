@@ -1,12 +1,13 @@
-//! Lightweight helpers for Muse Video-style AI video generation workflows.
+//! Typed primitives for assembling Muse Video generation jobs.
 //!
-//! This crate provides simple request, aspect-ratio, and metadata types for
-//! Rust applications that need to organize AI video generation prompts.
+//! The crate stays deliberately small: a fluent [`VideoRequest`] builder and an
+//! [`AspectRatio`] enum, with optional Serde support behind the `serde` feature.
+//! It models the shape of a job — it does not perform any network I/O.
 
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
-/// Common video aspect ratios.
+/// Output aspect ratios supported by a generation job.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub enum AspectRatio {
@@ -20,7 +21,7 @@ pub enum AspectRatio {
     Custom(String),
 }
 
-/// A structured request for an AI video generation workflow.
+/// A single video generation job, built up fluently from a prompt.
 #[derive(Debug, Clone, PartialEq, Eq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct VideoRequest {
@@ -79,7 +80,7 @@ mod tests {
 
     #[test]
     fn creates_default_video_request() {
-        let request = VideoRequest::new("A cinematic city scene");
+        let request = VideoRequest::new("Golden-hour timelapse over a mountain ridge");
 
         assert_eq!(request.duration_seconds, 8);
         assert_eq!(request.aspect_ratio, AspectRatio::Widescreen);
@@ -87,7 +88,7 @@ mod tests {
 
     #[test]
     fn updates_video_request_fields() {
-        let request = VideoRequest::new("A product video")
+        let request = VideoRequest::new("A handheld shot walking through a rainy alley")
             .aspect_ratio(AspectRatio::Vertical)
             .duration_seconds(12)
             .negative_prompt("blurry")

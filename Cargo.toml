@@ -1,8 +1,8 @@
 [package]
 name = "musevideo-client"
-version = "0.1.1"
+version = "0.1.2"
 edition = "2021"
-description = "A lightweight Rust helper toolkit for Muse Video text, image and video to video generation workflows."
+description = "Typed Rust primitives for describing Muse Video prompts, generation parameters, and pipeline metadata."
 license = "MIT"
 readme = "README.md"
 homepage = "https://musevideo.art"

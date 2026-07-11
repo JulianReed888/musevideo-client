@@ -1,33 +1,36 @@
 # musevideo-client
 
-A lightweight Rust helper toolkit for building [Muse Video](https://musevideo.art/) generation workflows.
+Typed Rust primitives for describing generation jobs on [Muse Video](https://musevideo.art/) — an AI platform that turns text, images, and existing footage into finished video.
 
-Muse Video is an AI video generation platform focused on text, image and video to video generation, visual reference handling, scene planning, and structured generation pipelines.
+Rather than wrapping any single HTTP endpoint, this crate gives you small, dependency-free building blocks: a request you can construct fluently, an aspect-ratio enum that covers the common social formats, and optional Serde derives so the same structs move cleanly between your service, a queue, and disk.
 
-This crate provides small Rust types and helpers for representing prompt requests, visual references, generation settings, and workflow metadata.
+## What's inside
 
-## Features
+- `VideoRequest` — a builder-style prompt request (prompt, negative prompt, duration, model)
+- `AspectRatio` — widescreen, vertical, square, or a custom ratio string
+- Zero required dependencies; enable the `serde` feature only when you need (de)serialization
 
-- Prompt request structures
-- Video generation settings (aspect ratio, duration, resolution)
-- Reference image metadata
-- Workflow state helpers
-- Optional Serde support for serialization
-
-## Example
+## Quick start
 
 ```rust
 use musevideo_client::{VideoRequest, AspectRatio};
 
-let request = VideoRequest::new("A cinematic aerial shot of a futuristic coastal city")
-    .aspect_ratio(AspectRatio::Widescreen)
-    .duration_seconds(8);
+let job = VideoRequest::new("A slow drone pass over a neon-lit night market")
+    .aspect_ratio(AspectRatio::Vertical)
+    .duration_seconds(6)
+    .negative_prompt("text overlays, watermark");
 
-assert_eq!(request.duration_seconds, 8);
+assert_eq!(job.duration_seconds, 6);
 ```
 
-## Why this crate?
+Turn on serialization when you need to persist or transmit a job:
 
-AI video workflows often need structured prompt data, generation parameters, and consistent metadata. This crate keeps those pieces simple and portable for Rust-based tools, CLIs, and backend services.
+```toml
+musevideo-client = { version = "0.1", features = ["serde"] }
+```
 
-Learn more about [Muse Video](https://musevideo.art/).
+## When to reach for it
+
+CLIs, batch workers, and backend services that assemble Muse Video jobs tend to re-invent the same prompt/parameter structs. Keeping them in one small, portable crate makes those jobs easy to build, log, and pass around without pulling in a heavy SDK.
+
+Docs and the full platform live at [musevideo.art](https://musevideo.art/).
